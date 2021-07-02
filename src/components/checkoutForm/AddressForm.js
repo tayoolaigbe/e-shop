@@ -24,13 +24,13 @@ const AddressForm = ({ checkoutToken }) => {
 		const { countries } = await commerce.services.localeListShippingCountries(
 			checkoutTokenId
 		);
-
+		console.log(checkoutTokenId);
 		console.log(countries);
 		setShippingCountries(countries);
 	};
 
 	useEffect(() => {
-		fetchShippingCountries(checkoutToken);
+		fetchShippingCountries(checkoutToken.id);
 	}, []);
 	return (
 		<>
