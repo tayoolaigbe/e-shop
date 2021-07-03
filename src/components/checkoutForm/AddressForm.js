@@ -33,9 +33,9 @@ const AddressForm = ({ checkoutToken, next }) => {
 		})
 	);
 
-	const options = shippingOptions.map(so => ({
-		id: so.id,
-		label: `${so.description} - (${so.price.formatted_with_symbol})`,
+	const options = shippingOptions.map(sO => ({
+		id: sO.id,
+		label: `${sO.description} - (${sO.price.formatted_with_symbol})`,
 	}));
 
 	const fetchShippingCountries = async checkoutTokenId => {
@@ -59,15 +59,16 @@ const AddressForm = ({ checkoutToken, next }) => {
 	const fetchShippingOptions = async (
 		checkoutTokenId,
 		country,
-		region = null
+		stateProvince = null
 	) => {
 		const options = await commerce.checkout.getShippingOptions(
 			checkoutTokenId,
-			{ country, region }
+			{ country, region: stateProvince }
 		);
 
 		setShippingOptions(options);
-		setShippingOption(options.id);
+		// console.log(options);
+		setShippingOption(options[0].id);
 	};
 
 	useEffect(() => {
