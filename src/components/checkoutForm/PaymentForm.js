@@ -9,14 +9,15 @@ import { loadStripe } from '@stripe/stripe-js';
 
 import Review from './Review';
 
-const stripePromise = loadStripe(process.env.REACT_STRIPE_PUBLIC_KEY);
+const apiKey = `${process.env.REACT_STRIPE_PUBLIC_KEY}`;
+const stripePromise = loadStripe(apiKey);
 
 const PaymentForm = ({
 	checkoutToken,
+	nextStep,
 	backStep,
 	shippingData,
 	onCaptureCheckout,
-	nextStep,
 }) => {
 	const handleSubmit = async (event, elements, stripe) => {
 		event.preventDefault();
@@ -29,7 +30,8 @@ const PaymentForm = ({
 			type: 'card',
 			card: cardElement,
 		});
-
+		// console.log(stripePromise);
+		// console.log(paymentMethod);
 		if (error) {
 			console.log('[error]', error);
 		} else {
@@ -41,7 +43,7 @@ const PaymentForm = ({
 					email: shippingData.email,
 				},
 				shipping: {
-					name: 'Primary',
+					name: 'International',
 					street: shippingData.address,
 					town_city: shippingData.city,
 					county_state: shippingData.shippingSubdivision,
@@ -51,7 +53,9 @@ const PaymentForm = ({
 				fulfillment: { shipping_method: shippingData.shippingOption },
 				payment: {
 					gateway: 'stripe',
-					stripe: { payment_method_id: paymentMethod.id },
+					stripe: {
+						payment_method_id: paymentMethod.id,
+					},
 				},
 			};
 
@@ -60,6 +64,7 @@ const PaymentForm = ({
 			nextStep();
 		}
 	};
+
 	return (
 		<>
 			<Review checkoutToken={checkoutToken} />
@@ -78,8 +83,8 @@ const PaymentForm = ({
 									Back
 								</Button>
 								<Button
-									variant="contained"
 									type="submit"
+									variant="contained"
 									disabled={!stripe}
 									color="primary"
 								>
